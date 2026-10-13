@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>简繁切换 · 体验页</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8f3; color: #293e31; font: 15px/1.8 "Microsoft YaHei", sans-serif; }
+    main { max-width: 860px; padding: 64px 32px; margin: auto; }
+    .eyebrow { color: #18755d; letter-spacing: 3px; font-size: 12px; font-weight: 700; }
+    h1 { font-size: 38px; letter-spacing: 2px; margin: 12px 0 8px; line-height: 1.4; }
+    .intro { color: #7b8b76; margin-bottom: 30px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    section { background: white; border: 1px solid #e0e7da; border-radius: 16px; padding: 24px; }
+    h2 { font-size: 15px; margin: 0 0 12px; }
+    .note { color: #90a087; font-size: 12px; margin: 10px 0 0; }
+    input, textarea, [contenteditable] { display: block; width: 100%; border: 1px solid #dce6d8; border-radius: 8px; background: #fafcf8; padding: 12px; color: #293e31; font: inherit; }
+    textarea { height: 120px; resize: vertical; }
+    input:focus, textarea:focus, [contenteditable]:focus { outline: 2px solid #18755d; outline-offset: 2px; }
+    .span { grid-column: 1/-1; }
+    .steps { display: flex; gap: 24px; color: #7b8b76; font-size: 12px; margin-top: 24px; }
+    .steps b { color: #18755d; margin-right: 5px; }
+    @media(max-width:640px) { .grid { grid-template-columns: 1fr; } main { padding: 32px 20px; } h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">TEXTSWITCH / 简繁切换</div>
+    <h1>同样的意思，另一种写法。</h1>
+    <p class="intro">选中下面的中文，试试转换、复制，或替换输入框里的文字。</p>
+    <div class="grid">
+      <section><h2>01 / 网页文字</h2><p id="article">汉字转换，让沟通更加自然。头发与发展，都有自己的写法。</p><p id="traditional">繁體中文，也能輕鬆轉換為簡體。讓文字的切換更簡單。</p><p class="note">选中一段文字，点击浮窗中的「转简体」或「转繁体」。</p></section>
+      <section><h2>02 / 单行输入框</h2><input id="single" value="前缀：汉字转换，头发发展：后缀"><p class="note">只选中「汉字转换」，替换后其余文字会保留。</p><input id="readonly" value="只读内容：漢字轉換" readonly aria-label="只读输入框"><p class="note">只读输入框支持转换与复制。</p></section>
+      <section><h2>03 / 多行输入框</h2><textarea id="multiline">第一行保持不变
+汉字转换，后台干杯
+第三行保持不变</textarea><p class="note">支持多行选区，保留原有换行。</p></section>
+      <section><h2>04 / 富文本编辑区</h2><div id="rich" contenteditable="true">前缀：<strong>汉字</strong><em>转换</em>：后缀</div><p class="note">选中的文字会以纯文本替换，选区外的格式保持原样。</p></section>
+      <section class="span"><h2>使用提示</h2><p class="note">安装后请刷新本页。关闭浮窗后，仍可右键转换或使用浏览器工具栏面板。如果通过本地文件打开，需要在扩展详情中开启「允许访问文件网址」。</p></section>
+    </div>
+    <div class="steps"><span><b>1</b>选中文字</span><span><b>2</b>选择字形</span><span><b>3</b>复制或替换</span></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>简繁切换 · TextSwitch</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">文</div>
+    <div><h1>简繁切换</h1><p class="subtitle">TextSwitch <span>· 让文字换一种写法</span></p></div>
+    <span class="local-badge"><span></span>离线</span>
+  </header>
+  <main>
+    <div class="direction" role="group" aria-label="转换方向">
+      <button data-direction="simplified" aria-pressed="false"><span>简</span>转换为简体</button>
+      <button data-direction="traditional" aria-pressed="true"><span>繁</span>转换为繁体</button>
+    </div>
+    <div class="label-row"><label for="source">原文</label><button id="read-selection" class="text-button" title="读取当前网页中选中的中文">读取网页选区 <span aria-hidden="true">↙</span></button></div>
+    <textarea id="source" placeholder="粘贴文字，或先在网页中选中中文…" spellcheck="false"></textarea>
+    <div class="conversion-divider" aria-hidden="true"><span></span><span>↓</span><span></span></div>
+    <div class="label-row"><label for="result" id="result-label">繁体结果</label><span id="count">0 字</span></div>
+    <textarea id="result" placeholder="转换结果会显示在这里" readonly spellcheck="false"></textarea>
+    <div class="actions">
+      <button id="copy" class="primary" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="2"/><path d="M12 6V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3"/></svg>复制结果</button>
+      <button id="replace" class="secondary" hidden>替换选中文字</button>
+    </div>
+    <p id="status" role="status" aria-live="polite">选中文字后，可在网页浮窗中直接转换。</p>
+    <details class="settings">
+      <summary>偏好设置 <span aria-hidden="true">⌄</span></summary>
+      <div class="setting-row"><div><label for="floating">选中文字时显示浮窗</label><p>也可以通过右键菜单进行转换</p></div><label class="switch"><input type="checkbox" id="floating" checked aria-label="选中文字时显示浮窗"><span></span></label></div>
+      <div class="setting-row"><label for="variant">繁体字形</label><select id="variant"><option value="t">通用繁体</option><option value="tw">台湾字形</option><option value="hk">香港字形</option></select></div>
+    </details>
+  </main>
+  <footer><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m8 1 5 2v4c0 3-3 6-5 7-2-1-5-4-5-7V3z"/><path d="m5.5 7.5 1.8 1.8 3.2-3.6"/></svg>所有转换都在本机完成</footer>
+  <script src="vendor/opencc.js"></script>
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
