@@ -10,7 +10,7 @@
 2. 点击「加载已解压的扩展程序」，选择本项目的 **`extension`** 目录（不是项目根目录）。
 3. 刷新已打开的网页。可以在扩展菜单中将「简繁切换」固定到工具栏。
 
-也可将 `release/TextSwitch-1.0.2.zip` 解压后，加载解压出的、包含 `manifest.json` 的目录。
+也可从 [GitHub 发布页](https://github.com/Lizjunn/TextSwitch/releases/latest)下载 `TextSwitch-1.0.2.zip`，解压后加载包含 `manifest.json` 的目录。
 
 ### 更新已有扩展
 
