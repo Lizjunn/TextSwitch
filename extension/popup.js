@@ -7,10 +7,51 @@
   const feedback = document.querySelector('#status');
   const floating = document.querySelector('#floating');
   const variant = document.querySelector('#variant');
+  const bulkFeedback = document.querySelector('#bulk-status');
+  const bulkUndo = document.querySelector('#bulk-undo');
+  const bulkButtons = [...document.querySelectorAll('[data-bulk-direction]')];
   let direction = 'traditional';
   let selection = null;
   let reading = false;
   let editRevision = 0;
+  let bulkBusy = false;
+
+  function bulkStatus(text, kind = '') {
+    bulkFeedback.textContent = text;
+    bulkFeedback.dataset.error = String(kind === 'error');
+    bulkFeedback.dataset.success = String(kind === 'success');
+  }
+
+  async function batch(nextDirection, undo = false) {
+    if (bulkBusy) return;
+    bulkBusy = true;
+    editRevision++;
+    selection = null;
+    replace.hidden = true;
+    for (const button of bulkButtons) button.disabled = true;
+    bulkUndo.disabled = true;
+    bulkStatus(undo ? '正在撤销…' : '正在转换页面输入框…');
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: undo ? 'TEXT_SWITCH_BULK_UNDO' : 'TEXT_SWITCH_BULK_CONVERT', direction: nextDirection, variant: variant.value
+      });
+      if (!response?.ok) { bulkStatus(response?.error || '无法连接网页，请刷新后重试。', 'error'); return; }
+      bulkUndo.hidden = !response.undoAvailable;
+      const action = undo ? '已撤销' : '已转换';
+      let text = response.changed ? `${action} ${response.changed} 个输入框。` : undo ? '没有可撤销的输入框。' : '没有需要转换的可见输入框。';
+      if (response.skipped) text += ` ${response.skipped} 个因内容变化或页面限制已跳过。`;
+      if (response.inaccessibleFrames) text += ` ${response.inaccessibleFrames} 个内嵌页面因访问限制未处理。`;
+      bulkStatus(text, response.changed ? 'success' : '');
+    } catch { bulkStatus('无法连接网页，请刷新后重试。', 'error'); }
+    finally {
+      bulkBusy = false;
+      for (const button of bulkButtons) button.disabled = false;
+      bulkUndo.disabled = false;
+    }
+  }
+
+  for (const button of bulkButtons) button.addEventListener('click', () => batch(button.dataset.bulkDirection));
+  bulkUndo.addEventListener('click', () => batch(null, true));
 
   function status(text, kind = '') {
     feedback.textContent = text;
@@ -103,6 +144,10 @@
       variant.value = value.traditionalVariant;
     } catch { /* defaults still permit offline conversion */ }
     convert();
+    const stateRevision = editRevision;
+    chrome.runtime.sendMessage({ type: 'TEXT_SWITCH_BULK_STATE' }).then(response => {
+      if (!bulkBusy && stateRevision === editRevision && response?.ok) bulkUndo.hidden = !response.undoAvailable;
+    }).catch(() => {});
     await readSelection(true);
   })();
 })();

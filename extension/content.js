@@ -516,7 +516,18 @@
   window.addEventListener('resize', reposition);
 
   chrome.runtime.onMessage.addListener((message, _sender, respond) => {
-    if (message.type === 'TEXT_SWITCH_CONVERT') {
+    if (_sender.id !== chrome.runtime.id) return;
+    if (['TEXT_SWITCH_BULK_CONVERT', 'TEXT_SWITCH_BULK_UNDO', 'TEXT_SWITCH_BULK_STATE'].includes(message.type)) {
+      const mutating = message.type !== 'TEXT_SWITCH_BULK_STATE';
+      if (mutating) suppressSelection = true;
+      try {
+        const result = message.type === 'TEXT_SWITCH_BULK_CONVERT' ? TextSwitchBulk.run(message.direction, message.variant) :
+          message.type === 'TEXT_SWITCH_BULK_UNDO' ? TextSwitchBulk.undo() : TextSwitchBulk.state();
+        if (result.changed) { current = null; contextSelection = null; hide(); }
+        respond(result);
+      } catch (error) { respond({ ok: false, error: error.message || '批量转换失败，请刷新网页后重试。' }); }
+      finally { if (mutating) setTimeout(() => { suppressSelection = false; }, 120); }
+    } else if (message.type === 'TEXT_SWITCH_CONVERT') {
       clearTimeout(selectionTimer);
       const next = capture();
       const matches = (snapshot) => snapshot && (!message.text || snapshot.text === message.text ||

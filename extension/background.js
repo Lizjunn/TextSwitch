@@ -31,10 +31,21 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   }
   // Selection and replacement requests come only from the extension's own popup.
   if (sender.url !== chrome.runtime.getURL('popup.html') ||
-    !['TEXT_SWITCH_GET_ACTIVE_SELECTION', 'TEXT_SWITCH_REPLACE_ACTIVE_SELECTION'].includes(message.type)) return;
+    !['TEXT_SWITCH_GET_ACTIVE_SELECTION', 'TEXT_SWITCH_REPLACE_ACTIVE_SELECTION',
+      'TEXT_SWITCH_BULK_CONVERT', 'TEXT_SWITCH_BULK_UNDO', 'TEXT_SWITCH_BULK_STATE'].includes(message.type)) return;
   (async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id) return { ok: false, error: '请先打开一个网页。' };
+    if (message.type.startsWith('TEXT_SWITCH_BULK_')) {
+      try {
+        // Start at the main document; it visits only visible, same-origin frames.
+        return await chrome.tabs.sendMessage(tab.id, {
+          type: message.type, direction: message.direction, variant: message.variant
+        }, { frameId: 0 });
+      } catch {
+        return { ok: false, error: '此页面暂不支持批量转换。普通网页请刷新后重试，本地文件请开启「允许访问文件网址」。' };
+      }
+    }
     const key = `selection-frame:${tab.id}`;
     const stored = await chrome.storage.session.get(key);
     const frameId = message.frameId ?? stored[key] ?? 0;

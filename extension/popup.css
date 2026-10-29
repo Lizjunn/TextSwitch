@@ -10,6 +10,15 @@ h1 { margin: 0 0 4px; font-size: 19px; line-height: 1.2; letter-spacing: 1px; fo
 .local-badge { display: flex; align-items: center; gap: 4px; margin-left: auto; padding: 4px 7px; border-radius: 20px; font-size: 10px; color: #43755d; background: #eaf2e9; white-space: nowrap; }
 .local-badge span { width: 4px; height: 4px; background: #649b6c; border-radius: 50%; }
 main { padding: 0 22px; }
+.bulk { padding: 13px; margin-bottom: 16px; border: 1px solid #dce7dd; border-radius: 12px; background: #f0f6ef; }
+.bulk h2 { margin: 0 0 5px; font-size: 13px; font-weight: 600; }
+.bulk p { margin: 0; font-size: 11px; line-height: 1.6; color: #768870; }
+.bulk-actions { display: flex; gap: 8px; margin-top: 11px; }
+.bulk-actions button { flex: 1; min-height: 35px; border: 1px solid #c7dacc; border-radius: 8px; font-size: 12px; }
+.bulk-feedback { margin-top: 8px; }
+#bulk-status[data-error="true"] { color: #ac4934; }
+#bulk-status[data-success="true"] { color: #18755d; }
+#bulk-undo { padding: 5px 0 0; }
 button, textarea, select, input { font: inherit; }
 button { appearance: none; cursor: pointer; }
 button:disabled { opacity: .45; cursor: default; }

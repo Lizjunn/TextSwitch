@@ -72,3 +72,27 @@ test('right-click commands route to the selected frame without modifying text au
   assert.equal(delivery[1].text,undefined);
   assert.equal(delivery[2].frameId,3);
 });
+
+test('bulk actions accept only the extension popup and start from the main frame', async () => {
+  let receive;
+  const deliveries=[];
+  const chrome={
+    runtime:{id:'test',getURL:file=>`chrome-extension://test/${file}`,onInstalled:{addListener:()=>{}},
+      onMessage:{addListener:fn=>{receive=fn}}},
+    contextMenus:{onClicked:{addListener:()=>{}}},
+    tabs:{onRemoved:{addListener:()=>{}},query:async()=>[{id:23}],sendMessage:async(...args)=>{
+      deliveries.push(args);return {ok:true,changed:2};
+    }}
+  };
+  vm.runInNewContext(fs.readFileSync(path.join(root,'extension/background.js'),'utf8'),{chrome});
+  const message={type:'TEXT_SWITCH_BULK_CONVERT',direction:'traditional',variant:'tw'};
+  assert.equal(receive(message,{id:'test',url:'https://untrusted.test/'},()=>assert.fail('Untrusted request accepted')),undefined);
+  assert.equal(deliveries.length,0);
+  const response=await new Promise(resolve=>{
+    assert.equal(receive(message,{id:'test',url:'chrome-extension://test/popup.html'},resolve),true);
+  });
+  assert.equal(response.changed,2);
+  assert.equal(deliveries[0][0],23);
+  assert.equal(deliveries[0][1].variant,'tw');
+  assert.equal(deliveries[0][2].frameId,0);
+});

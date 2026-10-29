@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "简繁切换 · TextSwitch",
-  "version": "1.0.2",
-  "description": "选中中文，一键切换简体或繁体。预览并复制结果，也可直接替换输入框中选中的文字。完全离线。",
+  "version": "1.1.0",
+  "description": "选中中文切换简体或繁体，预览、复制或替换选区，也可批量转换页面中已显示的输入框并撤销。完全离线。",
   "minimum_chrome_version": "110",
   "permissions": ["contextMenus", "storage", "clipboardWrite", "activeTab"],
   "background": { "service_worker": "background.js" },
@@ -14,7 +14,7 @@
   "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*", "file:///*"],
-    "js": ["vendor/opencc.js", "shared.js", "content.js"],
+    "js": ["vendor/opencc.js", "shared.js", "bulk.js", "content.js"],
     "all_frames": true,
     "match_about_blank": true,
     "run_at": "document_start"

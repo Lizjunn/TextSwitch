@@ -13,6 +13,15 @@
     <span class="local-badge"><span></span>离线</span>
   </header>
   <main>
+    <section class="bulk" aria-labelledby="bulk-title">
+      <h2 id="bulk-title">批量转换页面输入框</h2>
+      <p>转换已显示的文本输入框和多行文本域，包含滚动后才能看到的内容。</p>
+      <div class="bulk-actions">
+        <button class="secondary" data-bulk-direction="simplified">全部转简体</button>
+        <button class="secondary" data-bulk-direction="traditional">全部转繁体</button>
+      </div>
+      <div class="bulk-feedback"><p id="bulk-status" role="status" aria-live="polite">自动跳过隐藏、只读、禁用和密码字段。</p><button id="bulk-undo" class="text-button" hidden>撤销上次批量转换</button></div>
+    </section>
     <div class="direction" role="group" aria-label="转换方向">
       <button data-direction="simplified" aria-pressed="false"><span>简</span>转换为简体</button>
       <button data-direction="traditional" aria-pressed="true"><span>繁</span>转换为繁体</button>
